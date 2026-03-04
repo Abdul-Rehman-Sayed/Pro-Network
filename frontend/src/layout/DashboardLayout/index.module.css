@@ -1,3 +1,37 @@
 .homeContainer {
   display: flex;
 }
+
+.homeContainer > div:nth-child(odd) {
+  flex: 0.2;
+}
+
+.homeContainer > div:nth-child(even) {
+  flex: 0.6;
+}
+
+.homeContainer_leftBar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.2rem;
+}
+
+.sideBarOption {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.sideBarOption:hover {
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.sideBarOption > svg {
+  max-height: 1.5em;
+  min-height: 1.4em;
+}
+

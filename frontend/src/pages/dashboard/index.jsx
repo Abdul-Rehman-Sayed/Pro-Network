@@ -1,4 +1,4 @@
-import { getAboutUser } from "@/config/redux/action/authAction";
+import { getAboutUser, getAllUsers } from "@/config/redux/action/authAction";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
@@ -13,21 +13,24 @@ const Dashboard = () => {
   const authState = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-      if (!token) {
-        router.replace("/login");
-      } else {
-        dispatch(getAllPosts());
-        dispatch(getAboutUser({ token }));
-      }
+    if (!token) {
+      router.replace("/login");
+    } else {
+      dispatch(getAllPosts());
+      dispatch(getAboutUser({ token }));
     }
-  }, [router, dispatch]);
+    if (!authState.all_profiles_fetched) {
+      dispatch(getAllUsers());
+    }
+  }, []);
 
   return (
     <UserLayout>
-      <DashboardLayout></DashboardLayout>
+      <DashboardLayout>
+        <h1>Dashboard</h1>
+      </DashboardLayout>
     </UserLayout>
   );
 };
