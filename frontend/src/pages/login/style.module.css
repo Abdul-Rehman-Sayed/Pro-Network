@@ -1,0 +1,162 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh; 
+  background: snow;
+  padding: 2rem;
+}
+
+.cardContainer {
+  min-height: 550px; 
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 80vw;
+  max-width: 1000px;
+  background: white;
+  box-shadow: 10px 10px 15px rgb(173, 173, 173);
+}
+
+.cardContainer_left {
+  flex: 0.6;
+  padding: 2rem;
+  text-align: center;
+}
+
+.cardContainer_right {
+  flex: 0.4;
+  background: #005aae;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.rightContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 280px;
+}
+
+.rightTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.rightText {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.switchButton {
+  margin-top: 1rem;
+  padding: 10px 28px;
+  border-radius: 20px;
+  border: 2px solid white;
+  background: transparent;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.switchButton:hover {
+  background: white;
+  color: #005aae;
+}
+
+.cardTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.input {
+  padding-inline: 1.3rem;
+  padding-block: 0.6rem;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid #c4c4c4;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  padding-top: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.inputRow {
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+}
+
+.inputRow .input {
+  flex: 1;
+}
+
+.button {
+  margin-top: 1.3rem;
+  border-radius: 12px;
+  border: none;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 0;
+  width: 100%;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.25);
+}
+
+.button:hover {
+  background-color: #2563eb;
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .cardContainer {
+    flex-direction: column;
+    width: 95vw;
+  }
+
+  .cardContainer_left,
+  .cardContainer_right {
+    flex: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .inputRow {
+    flex-direction: column;
+  }
+
+  .cardTitle {
+    font-size: 1.6rem;
+  }
+}

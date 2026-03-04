@@ -1,0 +1,51 @@
+.container {
+  font-family: "DM Sans", sans-serif;
+  padding: 1.2rem;
+}
+
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding-inline: 2rem;
+  height: 80vh;
+}
+
+.mainContainer_left {
+  flex: 0.5;
+}
+
+.mainContainer_right {
+  flex: 0.5;
+}
+
+.mainContainer_left > p:nth-child(1) {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #0f0f0f, #898989);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.mainContainer_left > p:nth-child(2) {
+  font-size: 1.8rem;
+  color: #4d4d4d;
+  margin-bottom: 1rem;
+}
+
+.joinButton {
+  cursor: pointer;
+  width: fit-content;
+  user-select: none;
+  transition: all 0.2s;
+  margin-top: 0.8rem;
+  font-size: 1.4rem;
+  background: #8b5cf6;
+  color: white;
+  padding-inline: 1.2rem;
+  padding-block: 0.6rem;
+  border-radius: 0.4rem;
+}
