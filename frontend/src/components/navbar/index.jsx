@@ -11,9 +11,9 @@ const Navbar = () => {
   return (
     <div className={styles.container}>
       <nav className={styles.navBar}>
-        <h1 style={{ cursor: "pointer" }} onClick={() => router.push("/")}>
+        <h2 style={{ cursor: "pointer" }} onClick={() => router.push("/")}>
           Pro-Network
-        </h1>
+        </h2>
 
         <div className={styles.navBarOptionContainer}>
           {authState.profileFetched && (

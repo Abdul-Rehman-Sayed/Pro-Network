@@ -20,6 +20,12 @@
   flex: 0.5;
 }
 
+.mainContainer_right img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .mainContainer_left > p:nth-child(1) {
   font-size: 3rem;
   margin-bottom: 1rem;
@@ -48,4 +54,47 @@
   padding-inline: 1.2rem;
   padding-block: 0.6rem;
   border-radius: 0.4rem;
+}
+
+.joinButton:hover {
+  background: #7c3aed;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .mainContainer {
+    flex-direction: column-reverse;
+    height: auto;
+    padding-inline: 1rem;
+    padding-block: 2rem;
+    gap: 1.5rem;
+  }
+
+  .mainContainer_left,
+  .mainContainer_right {
+    flex: 1;
+    width: 100%;
+  }
+
+  .mainContainer_left > p:nth-child(1) {
+    font-size: 2rem;
+  }
+
+  .mainContainer_left > p:nth-child(2) {
+    font-size: 1.3rem;
+  }
+
+  .joinButton {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mainContainer_left > p:nth-child(1) {
+    font-size: 1.6rem;
+  }
+
+  .mainContainer_left > p:nth-child(2) {
+    font-size: 1rem;
+  }
 }

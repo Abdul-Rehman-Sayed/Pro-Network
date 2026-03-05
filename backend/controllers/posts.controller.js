@@ -60,7 +60,7 @@ export const deletePost = async (req, res) => {
     if (post.userId.toString() !== user._id.toString()) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    await Post.deletePost({ _id: post_id });
+    await Post.deleteOne({ _id: post_id });
 
     return res.json({ message: "Post deleted" });
   } catch (error) {
@@ -93,7 +93,7 @@ export const commentPost = async (req, res) => {
 };
 
 export const getCommentsByPost = async (req, res) => {
-  const { post_id } = req.body;
+  const { post_id } = req.query;
   try {
     const post = await Post.findOne({ _id: post_id });
 
