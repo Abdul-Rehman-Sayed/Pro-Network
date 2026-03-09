@@ -40,6 +40,7 @@ const postSlice = createSlice({
       })
       .addCase(getAllComments.fulfilled, (state, action) => {
         state.postId = action.payload.post_id;
+        state.comments = action.payload.comments;
       });
   },
 });

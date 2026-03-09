@@ -5,6 +5,7 @@ import {
   deletePost,
   incrementPostLike,
   getAllComments,
+  postComment,
 } from "@/config/redux/action/postAction";
 import DashboardLayout from "@/layout/DashboardLayout";
 import UserLayout from "@/layout/UserLayout";
@@ -24,7 +25,7 @@ const Dashboard = () => {
 
   const [postContent, setPostContent] = useState("");
   const [fileContent, setFileContent] = useState(null);
-
+  const [commentText, setCommentText] = useState("");
   const handleUpload = async () => {
     await dispatch(createPost({ body: postContent, file: fileContent }));
     setPostContent("");
@@ -235,16 +236,68 @@ const Dashboard = () => {
         </div>
         {postState.postId !== "" && (
           <div
-            onClick={() => {
-              dispatch(resetPostId());
-            }}
+            onClick={() => dispatch(resetPostId())}
             className={styles.commentsContainer}
           >
             <div
               onClick={(e) => e.stopPropagation()}
               className={styles.allCommentsContainer}
             >
-              {postState.comments.length === 0 && <h2>No comments</h2>}
+              <div className={styles.commentsList}>
+                {postState.comments.length === 0 ? (
+                  <p className={styles.noComments}>No comments yet</p>
+                ) : (
+                  postState.comments.map((comment) => (
+                    <div
+                      className={styles.singleCommentContainer}
+                      key={comment._id}
+                    >
+                      <div className={styles.singleCommentProfileContainer}>
+                        <img
+                          src={`${baseURL}/${comment.userId.profilePic}`}
+                          alt="Profile"
+                          className={styles.commentAvatar}
+                        />
+                        <div>
+                          <p className={styles.commentName}>
+                            {comment.userId.name}
+                          </p>
+                          <p className={styles.commentHandle}>
+                            @{comment.userId.username}
+                          </p>
+                        </div>
+                      </div>
+                      <p className={styles.commentBody}>{comment.body}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className={styles.postCommentContainer}>
+                <input
+                  type="text"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder="Write a comment..."
+                />
+                <div
+                  onClick={async () => {
+                    if (!commentText.trim()) return;
+                    await dispatch(
+                      postComment({
+                        post_id: postState.postId,
+                        body: commentText,
+                      }),
+                    );
+                    setCommentText("");
+                    await dispatch(
+                      getAllComments({ post_id: postState.postId }),
+                    );
+                  }}
+                  className={styles.commentButton}
+                >
+                  <p>Comment</p>
+                </div>
+              </div>
             </div>
           </div>
         )}

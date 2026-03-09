@@ -101,7 +101,12 @@ export const getCommentsByPost = async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    return res.status(200).json({ comments: post.comments });
+    const comments = await Comment.find({ postId: post_id }).populate(
+      "userId",
+      "username name profilePic",
+    );
+
+    return res.status(200).json(comments.reverse());
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -144,3 +149,4 @@ export const incrementLikes = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
