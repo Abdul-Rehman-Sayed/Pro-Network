@@ -72,14 +72,22 @@ export const sendConnectionRequest = createAsyncThunk(
   "user/sendConnectionRequest",
   async (user, thunkAPI) => {
     try {
+      const payload = {
+        token: user.token,
+        connectionId: user.user_id,
+      };
+
+      if (!payload.connectionId) {
+        return thunkAPI.rejectWithValue({ message: "Missing connectionId" });
+      }
+
       const response = await clientServer.post(
         "/user/send_connection_request",
-        {
-          token: user.token,
-          connectionId: user.user_id,
-        },
+        payload,
       );
+
       thunkAPI.dispatch(getConnectionRequest({ token: user.token }));
+      thunkAPI.dispatch(getMyconnections({ token: user.token }));
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);
@@ -118,19 +126,27 @@ export const getMyconnections = createAsyncThunk(
     }
   },
 );
-
 export const acceptConnection = createAsyncThunk(
   "user/acceptConnection",
   async (user, thunkAPI) => {
     try {
+      const payload = {
+        token: user.token,
+        requestId: user.requestId,
+        action_type: user.action,
+      };
+
+      if (!payload.requestId) {
+        return thunkAPI.rejectWithValue({ message: "Missing requestId" });
+      }
+
       const response = await clientServer.post(
         "/user/accept_connection_request",
-        {
-          token: user.token,
-          requestId: user.connectionId,
-          action_type: user.action,
-        },
+        payload,
       );
+
+      thunkAPI.dispatch(getConnectionRequest({ token: user.token }));
+      thunkAPI.dispatch(getMyconnections({ token: user.token }));
       return thunkAPI.fulfillWithValue(response.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data);

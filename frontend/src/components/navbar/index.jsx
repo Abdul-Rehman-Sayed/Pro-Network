@@ -20,7 +20,14 @@ const Navbar = () => {
                 <p className={styles.greeting}>
                   Hi, {authState.user.userId.name}
                 </p>
-                <p className={styles.navLink}>Profile</p>
+                <p
+                  onClick={() => {
+                    router.push("/profile");
+                  }}
+                  className={styles.navLink}
+                >
+                  Profile
+                </p>
                 <p
                   className={styles.logoutLink}
                   onClick={() => {

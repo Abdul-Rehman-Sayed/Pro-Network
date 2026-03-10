@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllPosts } from "@/config/redux/action/postAction";
 import {
   getConnectionRequest,
+  getMyconnections,
   sendConnectionRequest,
 } from "@/config/redux/action/authAction";
 
@@ -18,44 +19,76 @@ export default function ViewProfilePage({ userProfile }) {
   const authState = useSelector((state) => state.auth);
 
   const [userPosts, setUserPosts] = useState([]);
-  const [isCurrentUserInConnection, setIsCurrentUserInConnection] =
-    useState(false);
-  const [isConnectionNull, setIsConnectionNull] = useState(true);
-
-  const getUserPost = async () => {
-    await dispatch(getAllPosts());
-    await dispatch(
-      getConnectionRequest({ token: localStorage.getItem("token") }),
-    );
-  };
+  const [connectionStatus, setConnectionStatus] = useState("none");
+  // "none" | "pending" | "connected"
 
   useEffect(() => {
-    let post = postReducer.posts.filter((post) => {
-      return post.userId.username === router.query.username;
-    });
-    setUserPosts(post);
+    dispatch(getAllPosts());
+    dispatch(getConnectionRequest({ token: localStorage.getItem("token") }));
+    dispatch(getMyconnections({ token: localStorage.getItem("token") }));
+  }, []);
+
+  useEffect(() => {
+    const posts = postReducer.posts.filter(
+      (post) => post.userId.username === router.query.username,
+    );
+    setUserPosts(posts);
   }, [postReducer.posts]);
 
   useEffect(() => {
-    if (
-      authState.connections?.some(
-        (user) => user.connectionId._id === userProfile.userId._id,
-      )
-    ) {
-      setIsCurrentUserInConnection(true);
-      if (
-        authState.connections.find(
-          (user) => user.connectionId._id === userProfile.userId._id,
-        ).status_accepted === true
-      ) {
-        setIsConnectionNull(false);
-      }
-    }
-  }, [authState.connections]);
+    const targetId = userProfile.userId._id;
 
-  useEffect(() => {
-    getUserPost();
-  }, []);
+    // outgoing: current user sent request — target is stored under connectionId
+    const outgoing = authState.connections?.find(
+      (c) => c.connectionId?._id === targetId || c.connectionId === targetId,
+    );
+
+    // incoming: target user sent request to current user — sender stored under userId
+    const incoming = authState.connectionRequest?.find(
+      (c) => c.userId?._id === targetId || c.userId === targetId,
+    );
+
+    if (outgoing) {
+      setConnectionStatus(
+        outgoing.status_accepted === true ? "connected" : "pending",
+      );
+    } else if (incoming) {
+      setConnectionStatus(
+        incoming.status_accepted === true ? "connected" : "pending",
+      );
+    } else {
+      setConnectionStatus("none");
+    }
+  }, [authState.connections, authState.connectionRequest]);
+
+  const handleConnect = () => {
+    dispatch(
+      sendConnectionRequest({
+        token: localStorage.getItem("token"),
+        user_id: userProfile.userId._id,
+      }),
+    ).then(() => {
+      setConnectionStatus("pending");
+    });
+  };
+
+  const renderConnectionButton = () => {
+    if (connectionStatus === "connected") {
+      return <button className={styles.connectedButton}>Connected</button>;
+    }
+    if (connectionStatus === "pending") {
+      return (
+        <button className={styles.pendingButton} disabled>
+          Pending
+        </button>
+      );
+    }
+    return (
+      <button onClick={handleConnect} className={styles.connectBtn}>
+        Connect
+      </button>
+    );
+  };
 
   return (
     <UserLayout>
@@ -74,25 +107,7 @@ export default function ViewProfilePage({ userProfile }) {
                 </div>
 
                 <div className={styles.actionRow}>
-                  {isCurrentUserInConnection ? (
-                    <button className={styles.connectedButton}>
-                      {isConnectionNull ? "Pending" : "Connected"}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        dispatch(
-                          sendConnectionRequest({
-                            token: localStorage.getItem("token"),
-                            user_id: userProfile.userId._id,
-                          }),
-                        );
-                      }}
-                      className={styles.connectBtn}
-                    >
-                      Connect
-                    </button>
-                  )}
+                  {renderConnectionButton()}
 
                   <div
                     className={styles.downloadBtn}
@@ -127,6 +142,9 @@ export default function ViewProfilePage({ userProfile }) {
 
               <div className={styles.profileRight}>
                 <h3 className={styles.recentActivityTitle}>Recent Activity</h3>
+                {userPosts.length === 0 && (
+                  <p className={styles.emptyText}>No recent activity.</p>
+                )}
                 {userPosts.map((post) => (
                   <div key={post._id} className={styles.postCard}>
                     <div className={styles.card}>
@@ -148,12 +166,15 @@ export default function ViewProfilePage({ userProfile }) {
           <div className={styles.workHistory}>
             <h4>Work History</h4>
             <div>
+              {(!userProfile.pastWork || userProfile.pastWork.length === 0) && (
+                <p className={styles.emptyText}>No work history added.</p>
+              )}
               {userProfile.pastWork?.map((work, index) => (
                 <div key={index} className={styles.workHistoryCard}>
                   <p>
                     {work.company} — {work.position}
                   </p>
-                  <p>{work.years}</p>
+                  <p>{work.years} years</p>
                 </div>
               ))}
             </div>
@@ -167,10 +188,9 @@ export default function ViewProfilePage({ userProfile }) {
 export async function getServerSideProps(context) {
   const request = await clientServer.get(
     "/user/get_profile_based_on_username",
-    { params: { username: context.query.username } },
+    {
+      params: { username: context.query.username },
+    },
   );
-
-  const response = await request.data;
-  console.log(response);
   return { props: { userProfile: request.data.profile } };
 }
