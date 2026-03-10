@@ -2,6 +2,9 @@
   padding: 1rem 1.2rem 2rem;
   max-width: 900px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .backDropContainer {
@@ -31,7 +34,6 @@
 }
 
 .profileContainerDetails {
-  padding-top: 3.5rem;
   background: #ffffff;
   border: 1px solid #eaedf2;
   border-radius: 16px;
@@ -76,6 +78,14 @@
   font-weight: 400;
 }
 
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+
 .connectBtn {
   padding: 0.42rem 1.1rem;
   background: #2563eb;
@@ -86,7 +96,6 @@
   cursor: pointer;
   font-size: 0.88rem;
   font-weight: 600;
-  margin-bottom: 0.85rem;
   transition:
     background 0.18s,
     transform 0.14s,
@@ -110,7 +119,6 @@
   cursor: pointer;
   font-size: 0.88rem;
   font-weight: 600;
-  margin-bottom: 0.85rem;
   transition: background 0.18s;
 }
 
@@ -118,19 +126,44 @@
   background: #eff4ff;
 }
 
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid #e2e6ed;
+  background: #f8f9fb;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    transform 0.14s;
+  flex-shrink: 0;
+}
+
+.downloadBtn:hover {
+  background: #eff4ff;
+  border-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.downloadBtn svg {
+  width: 16px;
+  height: 16px;
+  color: #4b5563;
+}
+
+.downloadBtn:hover svg {
+  color: #2563eb;
+}
+
 .bioText {
   font-size: 0.92rem;
   color: #4b5563;
   line-height: 1.55;
   margin-top: 0.4rem;
-}
-
-.cardBody {
-  font-size: 0.88rem;
-  color: #374151;
-  line-height: 1.5;
-  word-break: break-word;
-  flex: 1;
 }
 
 .recentActivityTitle {
@@ -175,6 +208,65 @@
   display: block;
 }
 
+.cardBody {
+  font-size: 0.88rem;
+  color: #374151;
+  line-height: 1.5;
+  word-break: break-word;
+  flex: 1;
+}
+
+.workHistory {
+  background: #ffffff;
+  border: 1px solid #eaedf2;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.045);
+}
+
+.workHistory h4 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #9ca3af;
+  margin-bottom: 0.85rem;
+}
+
+.workHistoryCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  background: #f8f9fb;
+  border: 1px solid #eaedf2;
+  margin-bottom: 0.6rem;
+  transition: box-shadow 0.15s;
+}
+
+.workHistoryCard:last-child {
+  margin-bottom: 0;
+}
+
+.workHistoryCard:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.workHistoryCard p:first-child {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.workHistoryCard p:last-child {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .profileContainerDetails > div {
     flex-direction: column;
@@ -194,6 +286,12 @@
     height: 76px;
     bottom: -34px;
     left: 20px;
+  }
+
+  .workHistoryCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
   }
 }
 
@@ -222,5 +320,10 @@
 
   .nameRow h2 {
     font-size: 1.1rem;
+  }
+
+  .workHistory {
+    padding: 1rem;
+    border-radius: 12px;
   }
 }

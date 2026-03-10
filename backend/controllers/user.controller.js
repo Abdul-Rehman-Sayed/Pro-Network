@@ -10,67 +10,101 @@ import ConnectionRequest from "./../models/connections.model.js";
 const convertUserDataTOPDF = async (userData) => {
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDFDocument();
-
+      const doc = new PDFDocument({ margin: 60, size: "A4" });
       const outputPath = crypto.randomBytes(32).toString("hex") + ".pdf";
-
       const stream = fs.createWriteStream("uploads/" + outputPath);
 
-      stream.on("error", (err) => {
-        reject(new Error("Failed to create PDF file: " + err.message));
-      });
-
-      doc.on("error", (err) => {
-        reject(new Error("PDF generation error: " + err.message));
-      });
-
+      stream.on("error", (err) =>
+        reject(new Error("Failed to create PDF file: " + err.message)),
+      );
+      doc.on("error", (err) =>
+        reject(new Error("PDF generation error: " + err.message)),
+      );
       doc.pipe(stream);
 
-      // Check if profile picture exists before adding to PDF
       const profilePicPath = `uploads/${userData.userId.profilePic}`;
       if (fs.existsSync(profilePicPath)) {
         try {
-          doc.image(profilePicPath, {
-            align: "center",
-            width: 100,
-          });
-        } catch (imgErr) {
-          console.warn("Could not add profile picture:", imgErr.message);
+          doc.image(profilePicPath, 60, 60, { width: 72, height: 72 });
+        } catch (e) {
+          console.warn("Could not add profile picture:", e.message);
         }
-      } else {
-        console.warn("Profile picture not found at:", profilePicPath);
       }
 
-      doc.fontSize(14).text(`Name: ${userData.userId.name}`);
-      doc.fontSize(14).text(`Username: ${userData.userId.username}`);
-      doc.fontSize(14).text(`Email: ${userData.userId.email}`);
-      doc.fontSize(14).text(`Bio: ${userData.bio || "N/A"}`);
       doc
-        .fontSize(14)
-        .text(`Current Position: ${userData.currentPost || "N/A"}`);
+        .fontSize(22)
+        .font("Helvetica-Bold")
+        .text(userData.userId.name || "Unknown", 148, 68);
+      doc
+        .fontSize(11)
+        .font("Helvetica")
+        .text(`@${userData.userId.username}`, 148, 96);
+      doc.fontSize(11).text(userData.userId.email, 148, 112);
 
-      doc.fontSize(14).text("Past Work: ");
+      doc.moveDown(3);
+      doc
+        .moveTo(60, doc.y)
+        .lineTo(doc.page.width - 60, doc.y)
+        .lineWidth(0.5)
+        .stroke();
+      doc.moveDown(1.5);
+
+      doc.fontSize(9).font("Helvetica-Bold").text("ABOUT", 60);
+      doc.moveDown(0.5);
+      doc
+        .fontSize(11)
+        .font("Helvetica")
+        .text(userData.bio || "No bio provided.", 60);
+      doc.moveDown(1.5);
+
+      doc.fontSize(9).font("Helvetica-Bold").text("DETAILS", 60);
+      doc.moveDown(0.5);
+      doc
+        .fontSize(11)
+        .font("Helvetica")
+        .text(`Current Position: ${userData.currentPost || "N/A"}`, 60);
+      doc.moveDown(1.5);
+
+      doc
+        .moveTo(60, doc.y)
+        .lineTo(doc.page.width - 60, doc.y)
+        .lineWidth(0.25)
+        .stroke();
+      doc.moveDown(1.5);
+
+      doc.fontSize(9).font("Helvetica-Bold").text("WORK EXPERIENCE", 60);
+      doc.moveDown(0.5);
+
       if (userData.pastWork && userData.pastWork.length > 0) {
         userData.pastWork.forEach((work, index) => {
-          doc.fontSize(12).text(`Company: ${work.company || "N/A"}`);
-          doc.fontSize(12).text(`Position: ${work.position || "N/A"}`);
-          doc.fontSize(12).text(`Years: ${work.years || "N/A"}`);
+          doc
+            .fontSize(12)
+            .font("Helvetica-Bold")
+            .text(work.company || "Unknown Company", 60);
+          doc
+            .fontSize(11)
+            .font("Helvetica-Oblique")
+            .text(work.position || "N/A", 60);
+          doc
+            .fontSize(10)
+            .font("Helvetica")
+            .text(`Duration: ${work.years || "N/A"} years`, 60);
+          if (index < userData.pastWork.length - 1) doc.moveDown(1);
         });
       } else {
-        doc.fontSize(12).text("No past work experience recorded");
+        doc
+          .fontSize(11)
+          .font("Helvetica")
+          .text("No past work experience recorded.", 60);
       }
 
       doc.end();
-
-      stream.on("finish", () => {
-        resolve(outputPath);
-      });
+      stream.on("finish", () => resolve(outputPath));
     } catch (error) {
       reject(error);
     }
   });
 };
-
 export const register = async (req, res) => {
   try {
     const { name, email, password, username } = req.body;
@@ -306,7 +340,7 @@ export const sendConnectionRequest = async (req, res) => {
 };
 
 export const getMyConnectionRequests = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.query;
 
   try {
     const user = await User.findOne({ token });
@@ -324,7 +358,7 @@ export const getMyConnectionRequests = async (req, res) => {
 };
 
 export const allMyConnections = async (req, res) => {
-  const { token } = req.body;
+  const { token } = req.query;
 
   try {
     const user = await User.findOne({ token });
