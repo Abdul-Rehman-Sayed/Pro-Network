@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
 
 .backDropContainer {
@@ -20,41 +21,61 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
-.backDropContainer img {
+.avatarWrapper {
+  position: absolute;
+  bottom: -40px;
+  left: 32px;
+  width: 90px;
+  height: 90px;
+}
+
+.avatarWrapper img {
   width: 90px;
   height: 90px;
   object-fit: cover;
   border-radius: 50%;
-  position: absolute;
-  bottom: -40px;
-  left: 32px;
   border: 4px solid #ffffff;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
   background: #f3f4f8;
+  display: block;
 }
 
-.profileContainerDetails {
+.editPicLabel {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+  border: 4px solid transparent;
+}
+
+.avatarWrapper:hover .editPicLabel {
+  opacity: 1;
+}
+
+.editPicLabel svg {
+  width: 18px;
+  height: 18px;
+}
+
+.profileCard {
   background: #ffffff;
   border: 1px solid #eaedf2;
   border-radius: 16px;
   padding: 3.5rem 1.5rem 1.5rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.045);
   margin-top: 0.5rem;
-}
-
-.profileContainerDetails > div {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-.profileLeft {
-  flex: 1;
-  min-width: 0;
-}
-
-.profileRight {
-  flex: 0 0 220px;
 }
 
 .nameRow {
@@ -78,145 +99,148 @@
   font-weight: 400;
 }
 
-.actionRow {
+.bioRow {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.85rem;
-  flex-wrap: wrap;
-}
-
-.connectBtn {
-  padding: 0.42rem 1.1rem;
-  background: #2563eb;
-  border: none;
-  outline: none;
-  color: white;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 600;
-  transition:
-    background 0.18s,
-    transform 0.14s,
-    box-shadow 0.18s;
-  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.28);
-}
-
-.connectBtn:hover {
-  background: #1d4ed8;
-  transform: translateY(-1px);
-  box-shadow: 0 5px 14px rgba(37, 99, 235, 0.35);
-}
-
-.connectedButton {
-  padding: 0.42rem 1.1rem;
-  background: transparent;
-  border: 1.5px solid #2563eb;
-  outline: none;
-  color: #2563eb;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 600;
-  transition: background 0.18s;
-}
-
-.connectedButton:hover {
-  background: #eff4ff;
-}
-
-.downloadBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1.5px solid #e2e6ed;
-  background: #f8f9fb;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    border-color 0.15s,
-    transform 0.14s;
-  flex-shrink: 0;
-}
-
-.downloadBtn:hover {
-  background: #eff4ff;
-  border-color: #2563eb;
-  transform: translateY(-1px);
-}
-
-.downloadBtn svg {
-  width: 16px;
-  height: 16px;
-  color: #4b5563;
-}
-
-.downloadBtn:hover svg {
-  color: #2563eb;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
 }
 
 .bioText {
   font-size: 0.92rem;
   color: #4b5563;
   line-height: 1.55;
-  margin-top: 0.4rem;
-}
-
-.recentActivityTitle {
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: #9ca3af;
-  margin-bottom: 0.75rem;
-}
-
-.postCard {
-  margin-bottom: 0.65rem;
-}
-
-.card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.55rem;
-  border-radius: 10px;
-  border: 1px solid #eaedf2;
-  background: #f8f9fb;
-  transition: box-shadow 0.15s;
-}
-
-.card:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-}
-
-.cardProfileContainer {
-  display: flex;
-  flex-shrink: 0;
-}
-
-.cardProfileContainer img {
-  width: 52px;
-  height: 52px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #eaedf2;
-  display: block;
-}
-
-.cardBody {
-  font-size: 0.88rem;
-  color: #374151;
-  line-height: 1.5;
-  word-break: break-word;
   flex: 1;
 }
 
-.workHistory {
+.editBioContainer {
+  margin-top: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bioTextarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1.5px solid #e2e6ed;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #374151;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+  line-height: 1.55;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.bioTextarea:focus {
+  border-color: #2563eb;
+}
+
+.editActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.saveBtn {
+  padding: 0.42rem 1.2rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.saveBtn:hover {
+  background: #1d4ed8;
+}
+
+.cancelBtn {
+  padding: 0.42rem 1.2rem;
+  background: #f3f4f6;
+  color: #6b7280;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cancelBtn:hover {
+  background: #e5e7eb;
+}
+
+.editIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.28rem;
+  border-radius: 6px;
+  color: #9ca3af;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  flex-shrink: 0;
+}
+
+.editIconBtn:hover {
+  color: #2563eb;
+  background: #eff4ff;
+}
+
+.editIconBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.deleteIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.28rem;
+  border-radius: 6px;
+  color: #9ca3af;
+  transition:
+    color 0.15s,
+    background 0.15s;
+  flex-shrink: 0;
+}
+
+.deleteIconBtn:hover {
+  color: #ef4444;
+  background: #fef2f2;
+}
+
+.deleteIconBtn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.emptyText {
+  font-size: 0.88rem;
+  color: #9ca3af;
+}
+
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.historySection {
   background: #ffffff;
   border: 1px solid #eaedf2;
   border-radius: 16px;
@@ -224,74 +248,302 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.045);
 }
 
-.workHistory h4 {
+.historySectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.historySectionHeader h4 {
   font-size: 0.78rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: #9ca3af;
-  margin-bottom: 0.85rem;
+  margin: 0;
 }
 
-.workHistoryCard {
+.addBtn {
+  padding: 0.3rem 0.85rem;
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e2e6ed;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.addBtn:hover {
+  background: #eff4ff;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.activityList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.activityList::-webkit-scrollbar {
+  width: 4px;
+}
+
+.activityList::-webkit-scrollbar-thumb {
+  background: #e2e6ed;
+  border-radius: 4px;
+}
+
+.activityItem {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 10px;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
   background: #f8f9fb;
   border: 1px solid #eaedf2;
-  margin-bottom: 0.6rem;
-  transition: box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
-.workHistoryCard:last-child {
-  margin-bottom: 0;
+.activityItem:hover {
+  border-color: #d1d8e8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.workHistoryCard:hover {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+.activityMedia {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eaedf2;
+  display: block;
 }
 
-.workHistoryCard p:first-child {
+.activityBody {
   font-size: 0.9rem;
-  font-weight: 600;
-  color: #111827;
+  color: #374151;
+  line-height: 1.6;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.workHistoryCard p:last-child {
-  font-size: 0.8rem;
-  color: #9ca3af;
-  white-space: nowrap;
+.historyCard {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.historyCard:first-of-type {
+  padding-top: 0;
+}
+
+.historyCard:last-of-type {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.historyIcon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 8px;
+  background: #eff4ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .profileContainerDetails > div {
-    flex-direction: column;
-  }
+.historyIcon svg {
+  width: 17px;
+  height: 17px;
+  color: #2563eb;
+}
 
-  .profileRight {
-    flex: 1;
-    width: 100%;
+.historyText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.historyPrimary {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.historySecondary {
+  font-size: 0.84rem;
+  color: #4b5563;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.historyTertiary {
+  font-size: 0.78rem;
+  color: #9ca3af;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.2rem;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modalCard {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.1rem 1.25rem 0.9rem;
+  border-bottom: 1px solid #eaedf2;
+}
+
+.modalHeader h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 6px;
+  color: #9ca3af;
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.modalClose:hover {
+  color: #111827;
+  background: #f3f4f6;
+}
+
+.modalClose svg {
+  width: 18px;
+  height: 18px;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+}
+
+.errorText {
+  font-size: 0.83rem;
+  color: #ef4444;
+  font-weight: 500;
+  margin: 0;
+}
+
+.formInput {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: 1.5px solid #e2e6ed;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  color: #374151;
+  outline: none;
+  font-family: inherit;
+  background: #f8f9fb;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+  box-sizing: border-box;
+}
+
+.formInput:focus {
+  border-color: #2563eb;
+  background: #fff;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.9rem 1.25rem 1.1rem;
+  border-top: 1px solid #eaedf2;
+}
+
+@media (max-width: 768px) {
+  .topRow {
+    grid-template-columns: 1fr;
   }
 
   .backDropContainer {
     height: 160px;
   }
 
-  .backDropContainer img {
+  .avatarWrapper {
     width: 76px;
     height: 76px;
     bottom: -34px;
     left: 20px;
   }
 
-  .workHistoryCard {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.25rem;
+  .avatarWrapper img {
+    width: 76px;
+    height: 76px;
+  }
+
+  .profileCard {
+    padding: 3rem 1.25rem 1.25rem;
+  }
+
+  .activityList {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -305,16 +557,21 @@
     border-radius: 12px;
   }
 
-  .backDropContainer img {
+  .avatarWrapper {
     width: 64px;
     height: 64px;
     bottom: -28px;
     left: 16px;
+  }
+
+  .avatarWrapper img {
+    width: 64px;
+    height: 64px;
     border-width: 3px;
   }
 
-  .profileContainerDetails {
-    padding: 2.8rem 1rem 1.2rem;
+  .profileCard {
+    padding: 2.6rem 1rem 1.1rem;
     border-radius: 12px;
   }
 
@@ -322,8 +579,17 @@
     font-size: 1.1rem;
   }
 
-  .workHistory {
+  .historySection {
     padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .activityList {
+    grid-template-columns: 1fr;
+    max-height: 360px;
+  }
+
+  .modalCard {
     border-radius: 12px;
   }
 }

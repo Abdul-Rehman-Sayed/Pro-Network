@@ -19,113 +19,86 @@ export default function MyConnectionsPage() {
     dispatch(getMyconnections({ token: localStorage.getItem("token") }));
   }, []);
 
-  useEffect(() => {
-    if (authState.connectionRequest.length != 0) {
-      console.log(authState.connectionRequest);
-    }
-  }, [authState.connectionRequest]);
+  const pendingRequests = authState.connectionRequest.filter(
+    (c) => c.status_accepted === null,
+  );
+
+  const acceptedConnections = authState.connectionRequest.filter(
+    (c) => c.status_accepted !== null,
+  );
 
   return (
     <UserLayout>
       <DashboardLayout>
-        <div
-          style={{ display: "flex", flexDirection: "column", gap: "1.7rem" }}
-        >
-          <h1>My Connections</h1>
-
-          {authState.connectionRequest.length === 0 && (
-            <h2>No Connection Requests</h2>
-          )}
-          {authState.connectionRequest.length != 0 &&
-            authState.connectionRequest
-              .filter((connection) => connection.status_accepted === null)
-              .map((user, index) => {
-                return (
-                  <div
-                    onClick={() => {
-                      router.push(`/view_profile/${user.userId.username}`);
-                    }}
-                    key={index}
-                    className={styles.userCard}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "1.2rem",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <div className={styles.profilePic}>
-                        <img
-                          src={`${baseURL}/${user.userId.profilePic}`}
-                          alt=""
-                        />
-                      </div>
-                      <div className={styles.userInfo}>
-                        <h1>{user.userId.name}</h1>
-                        <p>{user.userId.username}</p>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-
-                          console.log("connection object:", user);
-                          console.log("requestId being sent:", user._id);
-
-                          if (!user._id) {
-                            console.error("requestId is undefined");
-                            return;
-                          }
-
-                          dispatch(
-                            acceptConnection({
-                              requestId: user._id,
-                              token: localStorage.getItem("token"),
-                              action: "accept",
-                            }),
-                          );
-                        }}
-                        className={styles.connectedButton}
-                      >
-                        Accept
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-        </div>
-        <h2>My Network</h2>
-        {authState.connectionRequest
-          .filter((connection) => connection.status_accepted !== null)
-          .map((user, index) => {
-            return (
-              <div
-                onClick={() => {
-                  router.push(`/view_profile/${user.userId.username}`);
-                }}
-                key={index}
-                className={styles.userCard}
-              >
+        <div className={styles.container}>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Connection Requests</h2>
+            {pendingRequests.length === 0 ? (
+              <p className={styles.emptyText}>
+                No pending connection requests.
+              </p>
+            ) : (
+              pendingRequests.map((user, index) => (
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1.2rem",
-                    justifyContent: "space-between",
-                  }}
+                  onClick={() =>
+                    router.push(`/view_profile/${user.userId.username}`)
+                  }
+                  key={index}
+                  className={styles.userCard}
                 >
                   <div className={styles.profilePic}>
                     <img src={`${baseURL}/${user.userId.profilePic}`} alt="" />
                   </div>
                   <div className={styles.userInfo}>
-                    <h1>{user.userId.name}</h1>
-                    <p>{user.userId.username}</p>
+                    <h3>{user.userId.name}</h3>
+                    <p>@{user.userId.username}</p>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (!user._id) return;
+                      dispatch(
+                        acceptConnection({
+                          requestId: user._id,
+                          token: localStorage.getItem("token"),
+                          action: "accept",
+                        }),
+                      );
+                    }}
+                    className={styles.connectedButton}
+                  >
+                    Accept
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>My Network</h2>
+            {acceptedConnections.length === 0 ? (
+              <p className={styles.emptyText}>No connections yet.</p>
+            ) : (
+              acceptedConnections.map((user, index) => (
+                <div
+                  onClick={() =>
+                    router.push(`/view_profile/${user.userId.username}`)
+                  }
+                  key={index}
+                  className={styles.userCard}
+                >
+                  <div className={styles.profilePic}>
+                    <img src={`${baseURL}/${user.userId.profilePic}`} alt="" />
+                  </div>
+                  <div className={styles.userInfo}>
+                    <h3>{user.userId.name}</h3>
+                    <p>@{user.userId.username}</p>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              ))
+            )}
+          </div>
+        </div>
       </DashboardLayout>
     </UserLayout>
   );

@@ -9,20 +9,16 @@ import { emptyMessage } from "@/config/redux/reducer/authReducer";
 const LoginComponent = () => {
   const authState = useSelector((state) => state.auth);
   const [isLoginMethod, setIsLoginMethod] = useState(false);
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-
   const router = useRouter();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (localStorage.getItem("token")) {
-        router.push("/dashboard");
-      }
+    if (typeof window !== "undefined" && localStorage.getItem("token")) {
+      router.push("/dashboard");
     }
   }, [router]);
 
@@ -31,10 +27,10 @@ const LoginComponent = () => {
   }, [isLoginMethod, dispatch]);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    if (authState.isSuccess && !authState.isError && authState.loggedIn) {
       router.push("/dashboard");
     }
-  });
+  }, [authState.isSuccess, authState.loggedIn]);
 
   const handleRegister = () => {
     dispatch(registerUser({ username, name, email, password }));
@@ -98,13 +94,11 @@ const LoginComponent = () => {
               <h2 className={styles.rightTitle}>
                 {isLoginMethod ? "New Here?" : "Welcome Back!"}
               </h2>
-
               <p className={styles.rightText}>
                 {isLoginMethod
                   ? "Create an account to get started."
                   : "Already have an account?"}
               </p>
-
               <button
                 onClick={() => setIsLoginMethod(!isLoginMethod)}
                 className={styles.switchButton}

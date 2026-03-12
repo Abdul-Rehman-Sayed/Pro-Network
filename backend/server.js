@@ -18,9 +18,9 @@ const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB Connected");
-
-    app.listen(8000, () => {
-      console.log(`Server running on port 8000`);
+    const PORT = process.env.PORT || 8000;
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
     console.log("Error:", error.message);

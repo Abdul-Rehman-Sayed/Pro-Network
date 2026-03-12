@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { reset } from "@/config/redux/reducer/authReducer";
+import Link from "next/link";
 
 const Navbar = () => {
   const router = useRouter();
@@ -14,16 +15,14 @@ const Navbar = () => {
       <nav className={styles.navBar}>
         <h2 onClick={() => router.push("/")}>Pro-Network</h2>
         <div className={styles.navBarOptionContainer}>
-          {authState.profileFetched ? (
+          {authState.profileFetched && authState.user?.userId ? (
             <div>
               <div>
                 <p className={styles.greeting}>
                   Hi, {authState.user.userId.name}
                 </p>
                 <p
-                  onClick={() => {
-                    router.push("/profile");
-                  }}
+                  onClick={() => router.push("/profile")}
                   className={styles.navLink}
                 >
                   Profile
@@ -32,8 +31,8 @@ const Navbar = () => {
                   className={styles.logoutLink}
                   onClick={() => {
                     localStorage.removeItem("token");
-                    router.push("/login");
                     dispatch(reset());
+                    router.push("/login");
                   }}
                 >
                   Log Out

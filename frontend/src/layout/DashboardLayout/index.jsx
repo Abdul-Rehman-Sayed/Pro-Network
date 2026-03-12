@@ -8,7 +8,6 @@ export default function DashboardLayout({ children }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const authState = useSelector((state) => state.auth);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
@@ -78,6 +77,8 @@ export default function DashboardLayout({ children }) {
     },
   ];
 
+  const skeletonCount = 3;
+
   return (
     <div className={styles.container}>
       <nav className={styles.mobileNav}>
@@ -112,22 +113,37 @@ export default function DashboardLayout({ children }) {
         <aside className={styles.extraContainer}>
           <h3 className={styles.topProfilesTitle}>Top Profiles</h3>
           <div className={styles.topProfilesList}>
-            {authState.all_profiles_fetched &&
-              authState.all_users.map((profile) => (
-                <div key={profile._id} className={styles.topProfile}>
-                  <div className={styles.topProfileAvatar}>
-                    {profile.userId.name?.charAt(0).toUpperCase()}
+            {!authState.all_profiles_fetched
+              ? Array.from({ length: skeletonCount }).map((_, i) => (
+                  <div key={i} className={styles.skeletonItem}>
+                    <div className={styles.skeletonAvatar} />
+                    <div className={styles.skeletonText}>
+                      <div className={styles.skeletonLine} />
+                      <div className={styles.skeletonLineShort} />
+                    </div>
                   </div>
-                  <div>
-                    <p className={styles.topProfileName}>
-                      {profile.userId.name}
-                    </p>
-                    <p className={styles.topProfileHandle}>
-                      @{profile.userId.username}
-                    </p>
+                ))
+              : authState.all_users.map((profile) => (
+                  <div
+                    key={profile._id}
+                    className={styles.topProfile}
+                    onClick={() =>
+                      router.push(`/view_profile/${profile.userId.username}`)
+                    }
+                  >
+                    <div className={styles.topProfileAvatar}>
+                      {profile.userId.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className={styles.topProfileName}>
+                        {profile.userId.name}
+                      </p>
+                      <p className={styles.topProfileHandle}>
+                        @{profile.userId.username}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
           </div>
         </aside>
       </div>

@@ -21,15 +21,15 @@ const DiscoverPage = () => {
   return (
     <UserLayout>
       <DashboardLayout>
-        <h1>Discover</h1>
-        <div className={styles.allUserProfile}>
-          {authState.all_profiles_fetched &&
-            authState.all_users.map((user) => {
-              return (
+        <div className={styles.container}>
+          <h2 className={styles.title}>Discover</h2>
+          <div className={styles.allUserProfile}>
+            {authState.all_profiles_fetched &&
+              authState.all_users.map((user) => (
                 <div
-                  onClick={() => {
-                    router.push(`/view_profile/${user.userId.username}`);
-                  }}
+                  onClick={() =>
+                    router.push(`/view_profile/${user.userId.username}`)
+                  }
                   key={user._id}
                   className={styles.userCard}
                 >
@@ -38,13 +38,13 @@ const DiscoverPage = () => {
                     src={`${baseURL}/${user.userId.profilePic}`}
                     alt="Profile Picture"
                   />
-                  <div>
-                    <h1>{user.userId.name}</h1>
-                    <p>{user.userId.username}</p>
+                  <div className={styles.userInfo}>
+                    <h3 className={styles.userName}>{user.userId.name}</h3>
+                    <p className={styles.userHandle}>@{user.userId.username}</p>
                   </div>
                 </div>
-              );
-            })}
+              ))}
+          </div>
         </div>
       </DashboardLayout>
     </UserLayout>

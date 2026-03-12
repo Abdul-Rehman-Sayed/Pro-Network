@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [postContent, setPostContent] = useState("");
   const [fileContent, setFileContent] = useState(null);
   const [commentText, setCommentText] = useState("");
+
   const handleUpload = async () => {
     await dispatch(createPost({ body: postContent, file: fileContent }));
     setPostContent("");
@@ -35,15 +36,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       router.replace("/login");
       return;
     }
-
     dispatch(getAllPosts());
     dispatch(getAboutUser({ token }));
-
     if (!authState.all_profiles_fetched) {
       dispatch(getAllUsers());
     }
@@ -68,7 +66,6 @@ const Dashboard = () => {
           <div className={styles.createPostContainer}>
             <img
               className={styles.profilePic}
-              width={100}
               src={`${baseURL}/${authState.user?.userId?.profilePic}`}
               alt="profile"
             />
@@ -77,9 +74,7 @@ const Dashboard = () => {
               value={postContent}
               placeholder="What's on your mind?"
               className={styles.textArea}
-              name=""
-              id=""
-            ></textarea>
+            />
             <label htmlFor="fileUpload">
               <div className={styles.fab}>
                 <svg
@@ -88,7 +83,6 @@ const Dashboard = () => {
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
                   stroke="currentColor"
-                  className="size-6"
                 >
                   <path
                     strokeLinecap="round"
@@ -111,6 +105,7 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+
         <div className={styles.postContainer}>
           {postState.posts?.map((post) => (
             <div key={post._id} className={styles.post}>
@@ -120,36 +115,30 @@ const Dashboard = () => {
                   src={`${baseURL}/${post.userId.profilePic}`}
                   alt=""
                 />
-
                 <div className={styles.postUserInfo}>
-                  <div className={styles.postNameRow}>
-                    <p className={styles.postName}>{post.userId.name}</p>
-
-                    {authState.user?.userId?._id === post.userId._id && (
-                      <div className={styles.deleteWrapper}>
-                        <svg
-                          onClick={async () => {
-                            await dispatch(deletePost(post._id));
-                            dispatch(getAllPosts());
-                          }}
-                          className={styles.deleteIcon}
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
+                  <p className={styles.postName}>{post.userId.name}</p>
                   <p className={styles.postUsername}>@{post.userId.username}</p>
                 </div>
+                {authState.user?.userId?._id === post.userId._id && (
+                  <svg
+                    onClick={async () => {
+                      await dispatch(deletePost(post._id));
+                      dispatch(getAllPosts());
+                    }}
+                    className={styles.deleteIcon}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                    />
+                  </svg>
+                )}
               </div>
 
               <p className={styles.postContent}>{post.body}</p>
@@ -161,6 +150,7 @@ const Dashboard = () => {
                   alt="post"
                 />
               )}
+
               <div className={styles.optionsContainer}>
                 <div
                   onClick={async () => {
@@ -175,7 +165,6 @@ const Dashboard = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -185,10 +174,11 @@ const Dashboard = () => {
                   </svg>
                   <p>{post.likes}</p>
                 </div>
+
                 <div
-                  onClick={() => {
-                    dispatch(getAllComments({ post_id: post._id }));
-                  }}
+                  onClick={() =>
+                    dispatch(getAllComments({ post_id: post._id }))
+                  }
                   className={styles.singleOptionContainer}
                 >
                   <svg
@@ -197,7 +187,6 @@ const Dashboard = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -206,12 +195,15 @@ const Dashboard = () => {
                     />
                   </svg>
                 </div>
+
                 <div
                   onClick={() => {
                     const text = encodeURIComponent(post.body);
                     const url = encodeURIComponent("apnacollege.in");
-                    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-                    window.open(twitterUrl, "_blank");
+                    window.open(
+                      `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+                      "_blank",
+                    );
                   }}
                   className={styles.singleOptionContainer}
                 >
@@ -221,7 +213,6 @@ const Dashboard = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="size-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -234,6 +225,7 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
+
         {postState.postId !== "" && (
           <div
             onClick={() => dispatch(resetPostId())}
