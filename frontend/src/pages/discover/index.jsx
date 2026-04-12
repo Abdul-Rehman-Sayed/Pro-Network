@@ -25,7 +25,12 @@ const DiscoverPage = () => {
           <h2 className={styles.title}>Discover</h2>
           <div className={styles.allUserProfile}>
             {authState.all_profiles_fetched &&
-              authState.all_users.map((user) => (
+              authState.all_users
+                .filter(
+                  (user) =>
+                    user.userId._id !== authState.user?.userId?._id
+                )
+                .map((user) => (
                 <div
                   onClick={() =>
                     router.push(`/view_profile/${user.userId.username}`)

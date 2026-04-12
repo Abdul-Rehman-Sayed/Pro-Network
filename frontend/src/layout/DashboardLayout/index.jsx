@@ -123,7 +123,12 @@ export default function DashboardLayout({ children }) {
                     </div>
                   </div>
                 ))
-              : authState.all_users.map((profile) => (
+              : authState.all_users
+                .filter(
+                  (profile) =>
+                    profile.userId._id !== authState.user?.userId?._id
+                )
+                .map((profile) => (
                   <div
                     key={profile._id}
                     className={styles.topProfile}

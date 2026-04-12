@@ -77,8 +77,6 @@ const authSlice = createSlice({
       .addCase(getAboutUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
-        state.connections = action.payload.connections || [];
-        state.connectionRequest = action.payload.connectionRequest || [];
         state.user = action.payload;
         state.profileFetched = true;
       })

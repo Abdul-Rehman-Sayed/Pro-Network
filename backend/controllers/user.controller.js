@@ -299,6 +299,13 @@ export const sendConnectionRequest = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
+    if (String(user._id) === String(user_id)) {
+      return res
+        .status(400)
+        .json({ message: "You cannot send a connection request to yourself" });
+    }
+
     const connectionUser = await User.findOne({ _id: user_id });
     if (!connectionUser) {
       return res.status(404).json({ message: "Connection user not found" });
@@ -344,9 +351,29 @@ export const allMyConnections = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    const connections = await ConnectionRequest.find({
+
+    // Find connections in both directions - where user is either sender or receiver
+    const incomingConnections = await ConnectionRequest.find({
       connectionId: user._id,
+      status_accepted: true,
     }).populate("userId", "name username email profilePic");
+
+    const outgoingConnections = await ConnectionRequest.find({
+      userId: user._id,
+      status_accepted: true,
+    }).populate("connectionId", "name username email profilePic");
+
+    const transformedOutgoing = outgoingConnections.map((connection) => {
+      return {
+        _id: connection._id,
+        userId: connection.connectionId,
+        connectionId: connection.userId,
+        status_accepted: connection.status_accepted,
+      };
+    });
+
+    const connections = [...incomingConnections, ...transformedOutgoing];
+
     return res.json(connections);
   } catch (error) {
     return res.status(500).json({ message: error.message });

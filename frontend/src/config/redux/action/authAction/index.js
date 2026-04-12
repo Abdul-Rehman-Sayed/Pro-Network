@@ -74,11 +74,11 @@ export const sendConnectionRequest = createAsyncThunk(
     try {
       const payload = {
         token: user.token,
-        connectionId: user.user_id,
+        user_id: user.user_id,
       };
 
-      if (!payload.connectionId) {
-        return thunkAPI.rejectWithValue({ message: "Missing connectionId" });
+      if (!payload.user_id) {
+        return thunkAPI.rejectWithValue({ message: "Missing user_id" });
       }
 
       const response = await clientServer.post(
@@ -133,7 +133,7 @@ export const acceptConnection = createAsyncThunk(
       const payload = {
         token: user.token,
         requestId: user.requestId,
-        action_type: user.action,
+        action: user.action,
       };
 
       if (!payload.requestId) {

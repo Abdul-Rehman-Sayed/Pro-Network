@@ -21,6 +21,18 @@ export default function ViewProfilePage({ userProfile }) {
   const [userPosts, setUserPosts] = useState([]);
   const [connectionStatus, setConnectionStatus] = useState("none");
 
+  if (!userProfile || !userProfile.userId) {
+    return (
+      <UserLayout>
+        <DashboardLayout>
+          <div className={styles.container}>
+            <p className={styles.emptyText}>Profile not found</p>
+          </div>
+        </DashboardLayout>
+      </UserLayout>
+    );
+  }
+
   useEffect(() => {
     dispatch(getAllPosts());
     dispatch(getConnectionRequest({ token: localStorage.getItem("token") }));
@@ -64,7 +76,12 @@ export default function ViewProfilePage({ userProfile }) {
     ).then(() => setConnectionStatus("pending"));
   };
 
+  const isOwnProfile = authState.user?.userId?._id === userProfile.userId._id;
+
   const renderConnectionButton = () => {
+    if (isOwnProfile) {
+      return null;
+    }
     if (connectionStatus === "connected") {
       return <button className={styles.connectedButton}>Connected</button>;
     }
@@ -222,11 +239,25 @@ export default function ViewProfilePage({ userProfile }) {
 }
 
 export async function getServerSideProps(context) {
-  const request = await clientServer.get(
-    "/user/get_profile_based_on_username",
-    {
-      params: { username: context.query.username },
-    },
-  );
-  return { props: { userProfile: request.data.profile } };
+  try {
+    const request = await clientServer.get(
+      "/user/get_profile_based_on_username",
+      {
+        params: { username: context.query.username },
+      },
+    );
+    
+    if (!request.data.profile) {
+      return {
+        notFound: true,
+      };
+    }
+    
+    return { props: { userProfile: request.data.profile } };
+  } catch (error) {
+    console.error("Error fetching profile:", error.message);
+    return {
+      notFound: true,
+    };
+  }
 }
